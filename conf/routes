@@ -1,0 +1,24 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+GET		/test						controllers.SecuredApi.test()
+GET		/hello						controllers.SecuredApi.getHello()
+
+POST	/register					controllers.SecurityController.register()
+POST    /login                      controllers.SecurityController.login()
+POST    /logout                     controllers.SecurityController.logout()
+
+# Project stuff
+POST	/project/create				controllers.ProjectController.createProject()
+GET		/projects/get				controllers.ProjectController.getProjects()
+POST	/project/get				controllers.ProjectController.getProject()
+POST	/project/assetcontainer/add controllers.ProjectController.addAssetContainer()
+POST	/assetcontainer/get			controllers.ProjectController.getAssetContainer()
+POST	/asset/create				controllers.ProjectController.addAsset()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+OPTIONS /*all 						controllers.Application.preflight(all)
