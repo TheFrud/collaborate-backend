@@ -26,6 +26,7 @@ public class AssetContainer extends Model{
     
     public String title;
     
+    @Column(columnDefinition = "TEXT")
     public String description;
     
     public String category;

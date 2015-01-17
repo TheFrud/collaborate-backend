@@ -7,8 +7,9 @@ create table asset (
   id                        bigint not null,
   asset_container_id        bigint not null,
   title                     varchar(255),
-  description               varchar(255),
+  description               TEXT,
   category                  varchar(255),
+  link                      varchar(255),
   creation_date             timestamp not null,
   user_id                   bigint,
   constraint pk_asset primary key (id))
@@ -18,7 +19,7 @@ create table asset_container (
   id                        bigint not null,
   project_id                bigint not null,
   title                     varchar(255),
-  description               varchar(255),
+  description               TEXT,
   category                  varchar(255),
   creation_date             timestamp not null,
   status                    varchar(255),
@@ -28,7 +29,7 @@ create table asset_container (
 create table comment (
   id                        bigint not null,
   asset_id                  bigint not null,
-  text                      varchar(255),
+  text                      TEXT,
   creation_date             timestamp not null,
   constraint pk_comment primary key (id))
 ;
@@ -37,7 +38,7 @@ create table project (
   id                        bigint not null,
   title                     varchar(256) not null,
   creation_date             timestamp not null,
-  description               varchar(255),
+  description               TEXT,
   security_policy           varchar(255),
   constraint pk_project primary key (id))
 ;
@@ -49,17 +50,24 @@ create table tag (
   constraint pk_tag primary key (id))
 ;
 
-create table user_ (
+create table userr (
   id                        bigint not null,
   auth_token                varchar(255),
+  rating                    bigint,
   email_address             varchar(256) not null,
   sha_password              bytea not null,
   full_name                 varchar(256) not null,
   creation_date             timestamp not null,
-  constraint uq_user__email_address unique (email_address),
-  constraint pk_user_ primary key (id))
+  constraint uq_userr_email_address unique (email_address),
+  constraint pk_userr primary key (id))
 ;
 
+
+create table project_userr (
+  project_id                     bigint not null,
+  userr_id                       bigint not null,
+  constraint pk_project_userr primary key (project_id, userr_id))
+;
 create sequence asset_seq;
 
 create sequence asset_container_seq;
@@ -70,11 +78,11 @@ create sequence project_seq;
 
 create sequence tag_seq;
 
-create sequence user__seq;
+create sequence userr_seq;
 
 alter table asset add constraint fk_asset_asset_container_1 foreign key (asset_container_id) references asset_container (id);
 create index ix_asset_asset_container_1 on asset (asset_container_id);
-alter table asset add constraint fk_asset_user_2 foreign key (user_id) references user_ (id);
+alter table asset add constraint fk_asset_user_2 foreign key (user_id) references userr (id);
 create index ix_asset_user_2 on asset (user_id);
 alter table asset_container add constraint fk_asset_container_project_3 foreign key (project_id) references project (id);
 create index ix_asset_container_project_3 on asset_container (project_id);
@@ -84,6 +92,10 @@ alter table tag add constraint fk_tag_project_5 foreign key (project_id) referen
 create index ix_tag_project_5 on tag (project_id);
 
 
+
+alter table project_userr add constraint fk_project_userr_project_01 foreign key (project_id) references project (id);
+
+alter table project_userr add constraint fk_project_userr_userr_02 foreign key (userr_id) references userr (id);
 
 # --- !Downs
 
@@ -95,9 +107,11 @@ drop table if exists comment cascade;
 
 drop table if exists project cascade;
 
+drop table if exists project_userr cascade;
+
 drop table if exists tag cascade;
 
-drop table if exists user_ cascade;
+drop table if exists userr cascade;
 
 drop sequence if exists asset_seq;
 
@@ -109,5 +123,5 @@ drop sequence if exists project_seq;
 
 drop sequence if exists tag_seq;
 
-drop sequence if exists user__seq;
+drop sequence if exists userr_seq;
 

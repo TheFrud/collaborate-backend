@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import controllers.SecurityController;
 import controllers.routes;
-import models.User_;
+import models.Userr;
 import play.Logger;
 import play.mvc.Http.Context;
 import play.mvc.Result;
@@ -15,10 +15,10 @@ public class Secured extends Security.Authenticator{
     @Override
     public String getUsername(Context ctx) {
     	Logger.info("1st level");
-    	User_ user = null;
+    	Userr user = null;
         String[] authTokenHeaderValues = ctx.request().headers().get(SecurityController.AUTH_TOKEN_HEADER);
         if ((authTokenHeaderValues != null) && (authTokenHeaderValues.length == 1) && (authTokenHeaderValues[0] != null)) {
-            user = models.User_.findByAuthToken(authTokenHeaderValues[0]);
+            user = models.Userr.findByAuthToken(authTokenHeaderValues[0]);
             if (user != null) {
                 ctx.args.put("user", user);
                 return user.getEmailAddress();

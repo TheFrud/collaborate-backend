@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import play.data.validation.Constraints;
@@ -24,6 +25,9 @@ public class Project extends Model{
     @Id
     public Long id;
     
+    @ManyToMany(cascade=CascadeType.ALL)
+    public List<Userr> owners = new ArrayList<>();
+    
     @Column(length = 256, nullable = false)
     @Constraints.Required
     @Constraints.MinLength(1)
@@ -33,6 +37,7 @@ public class Project extends Model{
     @Column(nullable = false)
     public Date creationDate;   
     
+    @Column(columnDefinition = "TEXT")
     public String description;
     
     public String securityPolicy;

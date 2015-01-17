@@ -27,9 +27,12 @@ public class Asset extends Model{
     
     public String title;
     
+    @Column(columnDefinition = "TEXT")
     public String description;
     
     public String category;
+    
+    public String link;
     
     @Column(nullable = false)
     public Date creationDate; 
@@ -41,7 +44,7 @@ public class Asset extends Model{
     public List<Comment> comments = new ArrayList<>();
     
     @ManyToOne(cascade=CascadeType.ALL)
-    public User_ user;
+    public Userr user;
     
     
     public static Finder<Long, Asset> find = new Finder<Long, Asset>(Long.class, Asset.class);

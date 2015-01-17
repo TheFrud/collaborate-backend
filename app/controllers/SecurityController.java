@@ -3,7 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import models.User_;
+import models.Userr;
 import play.Logger;
 import play.api.mvc.Session;
 import play.data.Form;
@@ -22,8 +22,8 @@ public class SecurityController extends Controller {
     public static final String AUTH_TOKEN = "authToken";
 
 
-    public static User_ getUser() {
-        return (User_)Http.Context.current().args.get("user");
+    public static Userr getUser() {
+        return (Userr)Http.Context.current().args.get("user");
     }
 
     public static Result register() {
@@ -33,7 +33,7 @@ public class SecurityController extends Controller {
     	String password = json.findPath("password").textValue();
     	String fullname = json.findPath("fullname").textValue();
     	
-    	User_ user = new User_(email, password, fullname); 
+    	Userr user = new Userr(email, password, fullname); 
     	user.save();
     	Logger.info("Backend: User registered.");
     	return ok("User registered");
@@ -54,10 +54,10 @@ public class SecurityController extends Controller {
     	String email = json.findPath("email").textValue();
     	String password = json.findPath("password").textValue();
 		
-    	User_ user = null;
+    	Userr user = null;
     	
     	try{
-		user = User_.findByEmailAddressAndPassword(email, password);
+		user = Userr.findByEmailAddressAndPassword(email, password);
     	}catch(Exception e){
     	}
 

@@ -18,6 +18,14 @@ POST	/project/get				controllers.ProjectController.getProject()
 POST	/project/assetcontainer/add controllers.ProjectController.addAssetContainer()
 POST	/assetcontainer/get			controllers.ProjectController.getAssetContainer()
 POST	/asset/create				controllers.ProjectController.addAsset()
+GET		/projects/getuserprojects	controllers.ProjectController.getProjectsWhereUserIsOwner()
+GET		/getcurrentuser				controllers.UserController.getCurrentUser()
+GET		/getassets					controllers.ProjectController.getAssets()
+GET		/getassetcontainers 		controllers.ProjectController.getAssetContainers()
+
+
+# Web socket test
+GET     /ws                    		controllers.ProjectController.socket()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

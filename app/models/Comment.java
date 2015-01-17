@@ -19,9 +19,10 @@ public class Comment extends Model{
     @Id
     public Long id;	
     
+    @Column(columnDefinition = "TEXT")
     public String text;
     
-    public User_ user;
+    public Userr user;
     
     @Column(nullable = false)
     public Date creationDate; 
