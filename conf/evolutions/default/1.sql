@@ -53,6 +53,8 @@ create table tag (
 create table userr (
   id                        bigint not null,
   auth_token                varchar(255),
+  username                  varchar(255),
+  bio                       TEXT,
   rating                    bigint,
   email_address             varchar(256) not null,
   sha_password              bytea not null,

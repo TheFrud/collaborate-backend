@@ -149,4 +149,25 @@ public class ProjectController extends Controller{
 		List<Asset> assets = Asset.find.all();
 		return ok(toJson(assets));
 	}
+	
+	public static Result removeProject() {
+		JsonNode json = request().body().asJson();
+		Long projectId = json.findPath("projectId").asLong();
+		Project project = Project.find.byId(projectId);
+		Logger.info("Projekt togs bort.");
+		project.delete();
+		return ok("Project removed");
+	}
+	
+	public static Result updateProjectDescription() {
+		JsonNode json = request().body().asJson();
+		Long projectId = json.findPath("projectId").asLong();
+		String projectDescription = json.findPath("projectDescription").textValue();
+		Project project = Project.find.byId(projectId);
+		
+		project.setDescription(projectDescription);
+		project.save();
+		Logger.info("Project updated.");
+		return ok("Project updated");
+	}
 }

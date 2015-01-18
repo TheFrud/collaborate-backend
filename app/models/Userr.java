@@ -30,6 +30,15 @@ public class Userr extends Model {
     public List<Asset> myAssets = new ArrayList<>();  
     */
     
+    public String username;
+    
+    @Column(columnDefinition = "TEXT")
+    public String bio;
+    
+    public void setBio(String bio) {
+    	this.bio = bio;
+    }
+    
     public long rating;
     
     @Column(length = 256, unique = true, nullable = false)
@@ -89,9 +98,10 @@ public class Userr extends Model {
         this.creationDate = new Date();
     }
 
-    public Userr(String emailAddress, String password, String fullName) {
+    public Userr(String emailAddress, String username, String password, String fullName) {
         setEmailAddress(emailAddress);
         setPassword(password);
+        this.username = username;
         this.fullName = fullName;
         this.creationDate = new Date();
     }

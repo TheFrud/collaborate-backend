@@ -40,6 +40,10 @@ public class Project extends Model{
     @Column(columnDefinition = "TEXT")
     public String description;
     
+    public void setDescription(String description) {
+    	this.description = description;
+    }
+    
     public String securityPolicy;
     
     @OneToMany(cascade=CascadeType.ALL)

@@ -32,13 +32,13 @@ public class SecurityController extends Controller {
     	String email = json.findPath("email").textValue();
     	String password = json.findPath("password").textValue();
     	String fullname = json.findPath("fullname").textValue();
+    	String username = json.findPath("username").textValue();
     	
-    	Userr user = new Userr(email, password, fullname); 
+    	Userr user = new Userr(email, username, password, fullname); 
     	user.save();
     	Logger.info("Backend: User registered.");
     	return ok("User registered");
     }
-    
     
     // returns an authToken	.. and user
     public static Result login() {

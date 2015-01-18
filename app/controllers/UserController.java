@@ -19,5 +19,19 @@ public class UserController extends Controller{
     	Userr user =  (Userr) ctx.args.get("user");
     	return ok(toJson(user));
 	}
-
+	
+    public static Result editUser() {
+    	Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
+    	Logger.info(String.valueOf(user.id));
+    	Logger.info(user.bio);
+    	Logger.info("Edit user method");
+    	JsonNode json = request().body().asJson();
+    	String bio = json.findPath("bio").textValue();
+    	Logger.info(bio);
+    	Logger.info(user.fullName);
+    	user.setBio(bio);
+    	user.save();
+    	return ok("User edited.");
+    }
 }

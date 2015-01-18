@@ -22,7 +22,9 @@ GET		/projects/getuserprojects	controllers.ProjectController.getProjectsWhereUse
 GET		/getcurrentuser				controllers.UserController.getCurrentUser()
 GET		/getassets					controllers.ProjectController.getAssets()
 GET		/getassetcontainers 		controllers.ProjectController.getAssetContainers()
-
+POST	/user/edit					controllers.UserController.editUser()
+POST	/project/remove				controllers.ProjectController.removeProject()
+POST	/project/description/update	controllers.ProjectController.updateProjectDescription()
 
 # Web socket test
 GET     /ws                    		controllers.ProjectController.socket()
