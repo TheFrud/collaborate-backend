@@ -1,3 +1,4 @@
+/*
 package models;
 
 import java.util.Date;
@@ -29,3 +30,4 @@ public class Comment extends Model{
 
     public static Finder<Long, Comment> find = new Finder<Long, Comment>(Long.class, Comment.class);
 }
+*/

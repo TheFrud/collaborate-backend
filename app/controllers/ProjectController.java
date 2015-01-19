@@ -6,7 +6,9 @@ import java.util.List;
 import static play.libs.Json.*;
 import models.Asset;
 import models.AssetContainer;
+import models.AssetContainerActivity;
 import models.Project;
+import models.ProjectActivity;
 import models.Tag;
 import models.Userr;
 import actors.MyWebSocketActor;
@@ -67,6 +69,12 @@ public class ProjectController extends Controller{
     	Userr user =  (Userr) ctx.args.get("user");
     	project.owners.add(user);
     	Logger.info("Before save");
+
+    	// Sätter in aktivitet
+
+    	ProjectActivity projectActivity = new ProjectActivity("Project was created.");
+    	project.activities.add(projectActivity);
+
     	project.save();
     	
     	
@@ -74,16 +82,20 @@ public class ProjectController extends Controller{
 		return ok("Backend: createProject-method.");
 	}
 	
-	public static Result getProjects() throws InterruptedException {
+	public static Result getProjects() {
 		List<Project> projects = Project.find.all();
-		Thread.sleep(150);
 		return ok(toJson(projects));
 	}
 	
 	public static Result getProjectsWhereUserIsOwner() {
-    	Context ctx = Context.current();
+		Logger.info("1");
+		Context ctx = Context.current();
+		Logger.info("2");
     	Userr user =  (Userr) ctx.args.get("user");
+    	Logger.info("3");
 		List<Project> userProjects = Project.find.where().eq("owners", user).findList();
+		Logger.info("4");
+		Logger.info(userProjects.get(0).title);
 		return ok(toJson(userProjects));
 	}
 	
@@ -97,6 +109,7 @@ public class ProjectController extends Controller{
 	public static Result addAssetContainer() {
     	JsonNode json = request().body().asJson();
     	Long projectId = json.findPath("projectId").asLong();	
+    	Logger.info("Projekt id: " + projectId);
     	Project project = Project.find.byId(projectId);
     	String assetContainerName = json.findPath("assetContainerName").textValue();
     	String assetContainerDescription = json.findPath("assetContainerDescription").textValue();
@@ -105,6 +118,12 @@ public class ProjectController extends Controller{
     	assetContainer.title = assetContainerName;
     	assetContainer.description = assetContainerDescription;
     	assetContainer.category = projectAssetContainerCategory;
+    	
+    	// Sätter in aktivitet
+
+    	ProjectActivity projectActivity = new ProjectActivity("Asset " + assetContainer.title + " was added to project.");
+    	project.addActivity(projectActivity);
+
     	project.assetContainers.add(assetContainer);
     	project.save();
     	Logger.info("addAssetContainer-method.");
@@ -129,19 +148,25 @@ public class ProjectController extends Controller{
     	Userr user =  (Userr) ctx.args.get("user");
     	
     	JsonNode json = request().body().asJson();
+    	Long projectId = json.findPath("projectId").asLong();
     	Long assetContainerId = json.findPath("assetContainerId").asLong();
     	String assetName = json.findPath("assetName").textValue();
     	String assetDescription = json.findPath("assetDescription").textValue();
     	String assetUrl = json.findPath("assetUrl").textValue();
-    	Asset asset = new Asset();
-    	asset.title = assetName;
-    	asset.description = assetDescription;
-    	asset.link = assetUrl;
-    	asset.user = user;
-    	
+    	Asset asset = new Asset(assetName, assetDescription, assetUrl, user);
+    	Logger.info("Projekt id: " + projectId);
     	AssetContainer assetContainer = AssetContainer.find.byId(assetContainerId);
     	assetContainer.assets.add(asset);
+    	
+    	
+    	Project project = Project.find.byId(projectId);
+    	ProjectActivity projectActivity = new ProjectActivity("Asset " + asset.title + " was added to Asset " + assetContainer.title + " in project.");
+    	project.addActivity(projectActivity);
+    	project.save();
+		
+    	
     	assetContainer.save();
+    	
 		return ok("");
 	}
 	
@@ -164,8 +189,13 @@ public class ProjectController extends Controller{
 		Long projectId = json.findPath("projectId").asLong();
 		String projectDescription = json.findPath("projectDescription").textValue();
 		Project project = Project.find.byId(projectId);
-		
 		project.setDescription(projectDescription);
+		
+		// Sätter in aktivitet
+
+		ProjectActivity projectActivity = new ProjectActivity("Project description was updated.");
+		project.addActivity(projectActivity);
+
 		project.save();
 		Logger.info("Project updated.");
 		return ok("Project updated");

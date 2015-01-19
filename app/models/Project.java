@@ -52,6 +52,13 @@ public class Project extends Model{
     @OneToMany(cascade=CascadeType.ALL)
     public List<AssetContainer> assetContainers = new ArrayList<>();
     
+    @OneToMany(cascade=CascadeType.ALL)
+    public List<ProjectActivity> activities = new ArrayList<>();
+    
+    public void addActivity(ProjectActivity activity) {
+    	this.activities.add(activity);
+    }
+    
     // public ArrayList<Comment> comments = new ArrayList<>();
     
     // public ArrayList<Contributor> contributors = new ArrayList<>();

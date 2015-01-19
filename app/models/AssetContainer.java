@@ -36,7 +36,10 @@ public class AssetContainer extends Model{
     
     @OneToMany(cascade=CascadeType.ALL)
     public List<Asset> assets = new ArrayList<>();
-    
+    /*
+    @OneToMany(cascade=CascadeType.ALL)
+    public List<AssetContainerActivity> activities = new ArrayList<>();
+    */
     // Uncompleted || Completed
     public String status;
     
