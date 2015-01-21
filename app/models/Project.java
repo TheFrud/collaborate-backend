@@ -59,6 +59,10 @@ public class Project extends Model{
     	this.activities.add(activity);
     }
     
+    public void addOwner(Userr user) {
+    	owners.add(user);
+    }
+    
     // public ArrayList<Comment> comments = new ArrayList<>();
     
     // public ArrayList<Contributor> contributors = new ArrayList<>();

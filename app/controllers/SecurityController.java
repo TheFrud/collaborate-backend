@@ -16,6 +16,9 @@ import static play.libs.Json.toJson;
 import static play.mvc.Controller.request;
 import static play.mvc.Controller.response;
 
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
+
 public class SecurityController extends Controller {
 
     public final static String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
@@ -36,6 +39,17 @@ public class SecurityController extends Controller {
     	
     	Userr user = new Userr(email, username, password, fullname); 
     	user.save();
+    	// Send email to registred user
+    	Email mail = new Email();
+    	mail.setSubject("Welcome to Devjungler!");
+    	mail.setFrom("Devjungler <thefrud@email.com>");
+    	mail.addTo("TO <"+email+">");
+    	// sends text, HTML or both...
+    	mail.setBodyText("A text message");
+    	mail.setBodyHtml(
+    			"<html><body><h3>Welcome to Devjungler " + fullname + "!</h3>You are now registered. :)</body></html>");
+    	MailerPlugin.send(mail);
+    	
     	Logger.info("Backend: User registered.");
     	return ok("User registered");
     }

@@ -16,6 +16,8 @@ import actors.MyWebSocketActor;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import play.Logger;
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -175,6 +177,20 @@ public class ProjectController extends Controller{
 		return ok(toJson(assets));
 	}
 	
+	public static Result getUserAssets() {
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");
+		List<Asset> userAssets = Asset.find.where().eq("user", user).findList();
+		return ok(toJson(userAssets));
+	}
+	
+	public static Result getAsset() {
+		JsonNode json = request().body().asJson();
+		Long assetId = json.findPath("assetId").asLong();
+		Asset asset = Asset.find.byId(assetId);
+		return ok(toJson(asset));
+	}
+	
 	public static Result removeProject() {
 		JsonNode json = request().body().asJson();
 		Long projectId = json.findPath("projectId").asLong();
@@ -199,5 +215,40 @@ public class ProjectController extends Controller{
 		project.save();
 		Logger.info("Project updated.");
 		return ok("Project updated");
+	}
+	
+	public static Result getUsers() {
+		List<Userr> users = Userr.find.all();
+		return ok(toJson(users));
+	}
+	
+	public static Result addOwnerToProject() {
+		JsonNode json = request().body().asJson();
+		String userEmail = json.findPath("userEmail").textValue();
+		Long projectId = json.findPath("projectId").asLong();
+		Userr user = Userr.find.where().eq("emailAddress", userEmail).findUnique();
+		Project project = Project.find.byId(projectId);
+		project.addOwner(user);
+		
+		// Sätter in aktivitet
+		
+		ProjectActivity projectActivity = new ProjectActivity(user.username + " was added as owner to project.");
+		project.addActivity(projectActivity);		
+		
+		// Mailar medlemmen som blev tillagd.
+		
+    	Email mail = new Email();
+    	mail.setSubject("Devjungler: Added to project!");
+    	mail.setFrom("Devjungler <thefrud@email.com>");
+    	mail.addTo("TO <"+userEmail+">");
+    	// sends text, HTML or both...
+    	mail.setBodyText("A text message");
+    	mail.setBodyHtml(
+    			"<html><body><b>" + user.fullName + "</b>, you have been added as an owner to project <b>" + project.title + "</b>. </body></html>");
+    	MailerPlugin.send(mail);		
+		
+		
+		project.save();
+		return ok("That went well");
 	}
 }

@@ -24,11 +24,11 @@ create table asset_activity (
 
 create table asset_container (
   id                        bigint not null,
+  project_id                bigint not null,
   title                     varchar(255),
   description               TEXT,
   category                  varchar(255),
   creation_date             timestamp not null,
-  project_id                bigint,
   status                    varchar(255),
   constraint pk_asset_container primary key (id))
 ;

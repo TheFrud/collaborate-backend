@@ -35,11 +35,8 @@ public class AssetContainer extends Model{
     @Column(nullable = false)
     public Date creationDate;
     
-    /*
-    @ManyToOne(cascade=CascadeType.ALL)
-    public Project project;
-    */
-    
+    // public Project project;
+
     @OneToMany(cascade=CascadeType.ALL)
     public List<Asset> assets = new ArrayList<>();
     /*
