@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import play.db.ebean.Model;
@@ -33,6 +34,11 @@ public class AssetContainer extends Model{
     
     @Column(nullable = false)
     public Date creationDate;
+    
+    /*
+    @ManyToOne(cascade=CascadeType.ALL)
+    public Project project;
+    */
     
     @OneToMany(cascade=CascadeType.ALL)
     public List<Asset> assets = new ArrayList<>();
