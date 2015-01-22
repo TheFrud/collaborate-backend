@@ -42,9 +42,16 @@ public class Asset extends Model{
     
     public String link;
     
+    public boolean approved = false;
+    
+    public void approve() {
+    	this.approved = true;
+    }
+    
     @Column(nullable = false)
     public Date creationDate; 
     /*
+     * 
     @OneToMany(cascade=CascadeType.ALL)
     public List<Asset> activities = new ArrayList<>();
     */
@@ -52,10 +59,14 @@ public class Asset extends Model{
    // @OneToMany(cascade=CascadeType.ALL)
    // public List<Tag> tags = new ArrayList<>();
     
-    /*
+    
     @OneToMany(cascade=CascadeType.ALL)
-    public List<Comment> comments = new ArrayList<>();
-    */
+    public List<AssetComment> comments = new ArrayList<>();
+    
+    public void addComment(AssetComment assetComment) {
+    	this.comments.add(assetComment);
+    }
+    
     
     @ManyToOne(cascade=CascadeType.ALL)
     public Userr user;

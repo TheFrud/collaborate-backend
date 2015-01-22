@@ -34,4 +34,11 @@ public class UserController extends Controller{
     	user.save();
     	return ok("User edited.");
     }
+    
+    public static Result getUser() {
+    	JsonNode json = request().body().asJson();
+    	Long userId = json.findPath("userId").asLong();	
+    	Userr user = Userr.find.byId(userId);
+    	return ok(toJson(user));
+    }
 }

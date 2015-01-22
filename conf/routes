@@ -29,6 +29,10 @@ POST	/project/remove				controllers.ProjectController.removeProject()
 POST	/project/description/update	controllers.ProjectController.updateProjectDescription()
 GET		/getusers					controllers.ProjectController.getUsers()
 POST	/addownertoproject			controllers.ProjectController.addOwnerToProject()
+POST	/addcommenttoasset			controllers.ProjectController.addCommentToAsset()
+POST	/getuser					controllers.UserController.getUser()
+POST	/asset/approve				controllers.ProjectController.approveAsset()
+POST	/assetcontainer/markascompleted	controllers.ProjectController.markAssetContainerAsCompleted()
 
 # Web socket test
 GET     /ws                    		controllers.ProjectController.socket()

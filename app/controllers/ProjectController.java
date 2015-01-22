@@ -5,6 +5,7 @@ import java.util.List;
 
 import static play.libs.Json.*;
 import models.Asset;
+import models.AssetComment;
 import models.AssetContainer;
 import models.AssetContainerActivity;
 import models.Project;
@@ -67,14 +68,16 @@ public class ProjectController extends Controller{
     	project.description = projectDescription;
     	project.securityPolicy = projectSecurityPolicy;
     	project.tags = projectTags;
+    	
     	Context ctx = Context.current();
     	Userr user =  (Userr) ctx.args.get("user");
+    	
     	project.owners.add(user);
     	Logger.info("Before save");
 
     	// Sätter in aktivitet
 
-    	ProjectActivity projectActivity = new ProjectActivity("Project was created.");
+    	ProjectActivity projectActivity = new ProjectActivity(user.username + " created project.");
     	project.activities.add(projectActivity);
 
     	project.save();
@@ -121,9 +124,12 @@ public class ProjectController extends Controller{
     	assetContainer.description = assetContainerDescription;
     	assetContainer.category = projectAssetContainerCategory;
     	
+    	Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
+    	
     	// Sätter in aktivitet
 
-    	ProjectActivity projectActivity = new ProjectActivity("Asset " + assetContainer.title + " was added to project.");
+    	ProjectActivity projectActivity = new ProjectActivity(user.username + " added Asset Container " + assetContainer.title + ".");
     	project.addActivity(projectActivity);
 
     	project.assetContainers.add(assetContainer);
@@ -162,7 +168,7 @@ public class ProjectController extends Controller{
     	
     	
     	Project project = Project.find.byId(projectId);
-    	ProjectActivity projectActivity = new ProjectActivity("Asset " + asset.title + " was added to Asset " + assetContainer.title + " in project.");
+    	ProjectActivity projectActivity = new ProjectActivity(user.username + " added Asset " + asset.title + " to Asset Container " + assetContainer.title + ".");
     	project.addActivity(projectActivity);
     	project.save();
 		
@@ -207,9 +213,12 @@ public class ProjectController extends Controller{
 		Project project = Project.find.byId(projectId);
 		project.setDescription(projectDescription);
 		
+    	Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
+		
 		// Sätter in aktivitet
 
-		ProjectActivity projectActivity = new ProjectActivity("Project description was updated.");
+		ProjectActivity projectActivity = new ProjectActivity(user.username + " updated Project Description.");
 		project.addActivity(projectActivity);
 
 		project.save();
@@ -226,13 +235,16 @@ public class ProjectController extends Controller{
 		JsonNode json = request().body().asJson();
 		String userEmail = json.findPath("userEmail").textValue();
 		Long projectId = json.findPath("projectId").asLong();
-		Userr user = Userr.find.where().eq("emailAddress", userEmail).findUnique();
+		Userr addedUser = Userr.find.where().eq("emailAddress", userEmail).findUnique();
 		Project project = Project.find.byId(projectId);
-		project.addOwner(user);
+		project.addOwner(addedUser);
+		
+    	Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
 		
 		// Sätter in aktivitet
 		
-		ProjectActivity projectActivity = new ProjectActivity(user.username + " was added as owner to project.");
+		ProjectActivity projectActivity = new ProjectActivity(user.username + " added " + addedUser.username + " as owner to Project.");
 		project.addActivity(projectActivity);		
 		
 		// Mailar medlemmen som blev tillagd.
@@ -244,11 +256,97 @@ public class ProjectController extends Controller{
     	// sends text, HTML or both...
     	mail.setBodyText("A text message");
     	mail.setBodyHtml(
-    			"<html><body><b>" + user.fullName + "</b>, you have been added as an owner to project <b>" + project.title + "</b>. </body></html>");
+    			"<html><body><b>" + addedUser.fullName + "</b>, you have been added as an owner to project <b>" + project.title + "</b>. </body></html>");
     	MailerPlugin.send(mail);		
 		
 		
 		project.save();
 		return ok("That went well");
 	}
+	
+	public static Result addCommentToAsset() {
+		JsonNode json = request().body().asJson();
+		
+		Long assetId = json.findPath("assetId").asLong();
+		Long projectId = json.findPath("projectId").asLong();
+		Long assetContainerId = json.findPath("assetContainerId").asLong();
+		String assetCommentArg = json.findPath("assetComment").textValue();
+		
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");
+		
+		AssetComment assetComment = new AssetComment(user, assetCommentArg);
+		
+		Asset asset = Asset.find.byId(assetId);
+		AssetContainer assetContainer = AssetContainer.find.byId(assetContainerId);
+		Project project = Project.find.byId(projectId);
+		
+		asset.addComment(assetComment);
+		
+		// Sätter in aktivitet
+		
+		ProjectActivity projectActivity = new ProjectActivity(
+				user.username + " added a comment to Asset " + asset.title + " in Asset Container " + assetContainer.title + ".");
+		project.addActivity(projectActivity);	
+		
+		asset.save();
+		project.save();
+		
+		return ok("Comment added");
+	}
+	
+	public static Result approveAsset() {
+		JsonNode json = request().body().asJson();
+		
+		Long assetId = json.findPath("assetId").asLong();
+		Long projectId = json.findPath("projectId").asLong();
+		Long assetContainerId = json.findPath("assetContainerId").asLong();
+		
+		Asset asset = Asset.find.byId(assetId);
+		AssetContainer assetContainer = AssetContainer.find.byId(assetContainerId);
+		Project project = Project.find.byId(projectId);
+		
+		// Approvar asset
+		asset.approve();
+		
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");		
+		
+		// Sätter in aktivitet
+		ProjectActivity projectActivity = new ProjectActivity(
+				user.username + " approved Asset " + asset.title + " in Asset Container " + assetContainer.title + ".");
+		project.addActivity(projectActivity);
+		
+		asset.save();
+		project.save();
+		
+		return ok("Asset approved.");
+	}
+	
+	public static Result markAssetContainerAsCompleted() {
+		JsonNode json = request().body().asJson();
+		
+		Long projectId = json.findPath("projectId").asLong();
+		Long assetContainerId = json.findPath("assetContainerId").asLong();
+		
+		AssetContainer assetContainer = AssetContainer.find.byId(assetContainerId);
+		Project project = Project.find.byId(projectId);
+		
+		// Approvar asset container
+		assetContainer.markAsCompleted();
+		
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");		
+		
+		// Sätter in aktivitet
+		ProjectActivity projectActivity = new ProjectActivity(
+				user.username + " marked Asset Container " + assetContainer.title + " as completed.");
+		project.addActivity(projectActivity);
+		
+		assetContainer.save();
+		project.save();
+		
+		return ok("Asset Container marked as completed");
+	}
+
 }

@@ -46,6 +46,10 @@ public class AssetContainer extends Model{
     // Uncompleted || Completed
     public String status;
     
+    public void markAsCompleted() {
+    	this.status = "completed";
+    }
+    
     //@OneToMany(cascade=CascadeType.ALL)
     //public List<Tag> tags = new ArrayList<>();
     
