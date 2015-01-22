@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 import models.Userr;
 import play.Logger;
 import play.mvc.Controller;
@@ -17,28 +19,37 @@ public class UserController extends Controller{
 		Logger.info("I metoden");
 		Context ctx = Context.current();
     	Userr user =  (Userr) ctx.args.get("user");
+    	
+    	Logger.info("Current user returned to client.");
     	return ok(toJson(user));
 	}
 	
     public static Result editUser() {
     	Context ctx = Context.current();
     	Userr user =  (Userr) ctx.args.get("user");
-    	Logger.info(String.valueOf(user.id));
-    	Logger.info(user.bio);
-    	Logger.info("Edit user method");
     	JsonNode json = request().body().asJson();
     	String bio = json.findPath("bio").textValue();
-    	Logger.info(bio);
-    	Logger.info(user.fullName);
+
     	user.setBio(bio);
     	user.save();
-    	return ok("User edited.");
+    	
+    	Logger.info("Current user edited.");
+    	return ok("Current user edited.");
     }
     
     public static Result getUser() {
     	JsonNode json = request().body().asJson();
     	Long userId = json.findPath("userId").asLong();	
     	Userr user = Userr.find.byId(userId);
+    	
+    	Logger.info("User returned to client.");
     	return ok(toJson(user));
     }
+    
+	public static Result getUsers() {
+		List<Userr> users = Userr.find.all();
+		
+		Logger.info("Users returned to client.");
+		return ok(toJson(users));
+	}
 }

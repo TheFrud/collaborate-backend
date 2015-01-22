@@ -13,6 +13,7 @@ public class Application extends Controller {
 		response().setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
 		response().setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Referer, User-Agent, cookie, X-AUTH-TOKEN, authToken");
 		response().setHeader("Access-Control-Allow-Credentials", "true"); 
+		Logger.info("Setting response headers.");
 		return ok();
 	}
 
@@ -22,7 +23,4 @@ public class Application extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 	
-	public static Result test() {
-		return ok("");
-	}
 }

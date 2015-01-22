@@ -3,40 +3,54 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
-GET		/test						controllers.SecuredApi.test()
-GET		/hello						controllers.SecuredApi.getHello()
+GET     /                               controllers.Application.index()
 
-POST	/register					controllers.SecurityController.register()
-POST    /login                      controllers.SecurityController.login()
-POST    /logout                     controllers.SecurityController.logout()
+# Security 
+POST	/register					    controllers.SecurityController.register()
+POST    /login                       	controllers.SecurityController.login()
+POST    /logout                         controllers.SecurityController.logout()
 
 # Project stuff
-POST	/project/create				controllers.ProjectController.createProject()
-GET		/projects/get				controllers.ProjectController.getProjects()
-POST	/project/get				controllers.ProjectController.getProject()
-POST	/project/assetcontainer/add controllers.ProjectController.addAssetContainer()
-POST	/assetcontainer/get			controllers.ProjectController.getAssetContainer()
-POST	/asset/create				controllers.ProjectController.addAsset()
-GET		/projects/getuserprojects	controllers.ProjectController.getProjectsWhereUserIsOwner()
-GET		/getcurrentuser				controllers.UserController.getCurrentUser()
-GET		/getassets					controllers.ProjectController.getAssets()
-GET		/getuserassets				controllers.ProjectController.getUserAssets()
-POST	/getasset					controllers.ProjectController.getAsset()
-GET		/getassetcontainers 		controllers.ProjectController.getAssetContainers()
-POST	/user/edit					controllers.UserController.editUser()
-POST	/project/remove				controllers.ProjectController.removeProject()
-POST	/project/description/update	controllers.ProjectController.updateProjectDescription()
-GET		/getusers					controllers.ProjectController.getUsers()
-POST	/addownertoproject			controllers.ProjectController.addOwnerToProject()
-POST	/addcommenttoasset			controllers.ProjectController.addCommentToAsset()
-POST	/getuser					controllers.UserController.getUser()
-POST	/asset/approve				controllers.ProjectController.approveAsset()
-POST	/assetcontainer/markascompleted	controllers.ProjectController.markAssetContainerAsCompleted()
+GET		/projects/get					controllers.ProjectController.getProjects()
+GET		/projects/getuserprojects		controllers.ProjectController.getProjectsWhereUserIsOwner()
+POST	/project/create					controllers.ProjectController.createProject()
+POST	/project/get					controllers.ProjectController.getProject()
+POST	/project/remove					controllers.ProjectController.removeProject()
+POST	/project/description/update		controllers.ProjectController.updateProjectDescription()
+POST	/addownertoproject				controllers.ProjectController.addOwnerToProject()
+
+# Asset Container stuff
+GET		/getassetcontainers 			controllers.AssetContainerController.getAssetContainers()
+POST	/project/assetcontainer/add		controllers.AssetContainerController.addAssetContainer()
+POST	/assetcontainer/get				controllers.AssetContainerController.getAssetContainer()
+POST	/assetcontainer/markascompleted	controllers.AssetContainerController.markAssetContainerAsCompleted()
+
+# Asset stuff
+GET		/getassets						controllers.AssetController.getAssets()
+GET		/getuserassets					controllers.AssetController.getUserAssets()
+POST	/asset/create					controllers.AssetController.addAsset()
+POST	/getasset						controllers.AssetController.getAsset()
+POST	/addcommenttoasset				controllers.AssetController.addCommentToAsset()
+POST	/asset/approve					controllers.AssetController.approveAsset()
+
+# User stuff
+GET		/getcurrentuser					controllers.UserController.getCurrentUser()
+GET		/getusers						controllers.UserController.getUsers()
+POST	/user/edit						controllers.UserController.editUser()
+POST	/getuser						controllers.UserController.getUser()
+
+
+
+
+
+
+
+
+
 
 # Web socket test
-GET     /ws                    		controllers.ProjectController.socket()
+GET     /ws                    			controllers.ProjectController.socket()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-OPTIONS /*all 						controllers.Application.preflight(all)
+GET     /assets/*file             	    controllers.Assets.at(path="/public", file)
+OPTIONS /*all 							controllers.Application.preflight(all)

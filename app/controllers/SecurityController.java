@@ -30,7 +30,7 @@ public class SecurityController extends Controller {
     }
 
     public static Result register() {
-    	Logger.info("Backend: Register method.");
+    	Logger.info("Client trying to register.");
     	JsonNode json = request().body().asJson();
     	String email = json.findPath("email").textValue();
     	String password = json.findPath("password").textValue();
@@ -50,8 +50,8 @@ public class SecurityController extends Controller {
     			"<html><body><h3>Welcome to Devjungler " + fullname + "!</h3>You are now registered. :)</body></html>");
     	MailerPlugin.send(mail);
     	
-    	Logger.info("Backend: User registered.");
-    	return ok("User registered");
+    	Logger.info("User registered. Mail sent to user's email-address.");
+    	return ok("User registered. Mail sent to user's email-address.");
     }
     
     // returns an authToken	.. and user
@@ -63,7 +63,7 @@ public class SecurityController extends Controller {
         }
         Login login = loginForm.get();
         */
-    	Logger.info("Backend: Login method.");
+    	Logger.info("Client trying to login.");
     	JsonNode json = request().body().asJson();
     	String email = json.findPath("email").textValue();
     	String password = json.findPath("password").textValue();
@@ -98,7 +98,9 @@ public class SecurityController extends Controller {
         
     	// response().discardCookie(AUTH_TOKEN);
         getUser().deleteAuthToken();
-        return ok("Backend: Logged out");
+        
+        Logger.info("User logged out");
+        return ok("User logged out");
     }
 
     public static class Login {

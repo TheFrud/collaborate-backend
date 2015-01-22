@@ -14,7 +14,6 @@ public class Secured extends Security.Authenticator{
 	
     @Override
     public String getUsername(Context ctx) {
-    	Logger.info("1st level");
     	Userr user = null;
         String[] authTokenHeaderValues = ctx.request().headers().get(SecurityController.AUTH_TOKEN_HEADER);
         if ((authTokenHeaderValues != null) && (authTokenHeaderValues.length == 1) && (authTokenHeaderValues[0] != null)) {
