@@ -58,11 +58,6 @@ public class ProjectController extends Controller{
     		projectTags.add(tag);
     	}
     	
-    	
-    	for(Tag t: projectTags){
-    		Logger.info(t.text);
-    	}
-    	
     	project.title = projectTitle;
     	project.description = projectDescription;
     	project.securityPolicy = projectSecurityPolicy;

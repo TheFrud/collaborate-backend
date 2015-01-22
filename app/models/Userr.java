@@ -122,24 +122,20 @@ public class Userr extends Model {
     public static Finder<Long, Userr> find = new Finder<Long, Userr>(Long.class, Userr.class);
     
     public static Userr findByAuthToken(String authToken) {
-    	System.out.println("--- 1");
         if (authToken == null) {
             return null;
         }
 
         try  {
-        	System.out.println("--- 2");
             return find.where().eq("authToken", authToken).findUnique();
         }
         catch (Exception e) {
-        	System.out.println("--- 3 --- Nullskit");
             return null;
         }
     }
 
     public static Userr findByEmailAddressAndPassword(String emailAddress, String password) {
         // todo: verify this query is correct.  Does it need an "and" statement?
-    	System.out.println("I metoden");
         return find.where().eq("emailAddress", emailAddress.toLowerCase()).eq("shaPassword", getSha512(password)).findUnique();
     }
 
