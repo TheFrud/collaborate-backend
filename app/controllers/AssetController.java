@@ -97,14 +97,14 @@ public class AssetController extends Controller {
 		// Sätter in aktivitet
 		
 		ProjectActivity projectActivity = new ProjectActivity(
-				user.username + " added a comment to Asset " + asset.title + " in Asset Container " + assetContainer.title + ".");
+				user.username + " posted a comment to Asset " + asset.title + " in Asset Container " + assetContainer.title + ".");
 		project.addActivity(projectActivity);	
 		
 		asset.save();
 		project.save();
 		
-		Logger.info("Comment added to Asset.");
-		return ok("Comment added to Asset.");
+		Logger.info("Comment posted to Asset.");
+		return ok("Comment posted to Asset.");
 	}
 	
 	public static Result approveAsset() {

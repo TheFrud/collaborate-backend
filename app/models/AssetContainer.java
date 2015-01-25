@@ -50,6 +50,13 @@ public class AssetContainer extends Model{
     	this.status = "completed";
     }
     
+    @OneToMany(cascade=CascadeType.ALL)
+    public List<AssetContainerComment> comments = new ArrayList<>();
+    
+    public void addComment(AssetContainerComment assetComment) {
+    	this.comments.add(assetComment);
+    }
+    
     //@OneToMany(cascade=CascadeType.ALL)
     //public List<Tag> tags = new ArrayList<>();
     

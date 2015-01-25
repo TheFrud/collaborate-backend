@@ -50,6 +50,15 @@ create table asset_container_activity (
   constraint pk_asset_container_activity primary key (id))
 ;
 
+create table asset_container_comment (
+  id                        bigint not null,
+  asset_container_id        bigint not null,
+  text                      TEXT,
+  user_id                   bigint,
+  creation_date             timestamp not null,
+  constraint pk_asset_container_comment primary key (id))
+;
+
 create table project (
   id                        bigint not null,
   title                     varchar(256) not null,
@@ -65,6 +74,15 @@ create table project_activity (
   creation_date             timestamp not null,
   message                   varchar(255),
   constraint pk_project_activity primary key (id))
+;
+
+create table project_comment (
+  id                        bigint not null,
+  project_id                bigint not null,
+  text                      TEXT,
+  user_id                   bigint,
+  creation_date             timestamp not null,
+  constraint pk_project_comment primary key (id))
 ;
 
 create table tag (
@@ -104,9 +122,13 @@ create sequence asset_container_seq;
 
 create sequence asset_container_activity_seq;
 
+create sequence asset_container_comment_seq;
+
 create sequence project_seq;
 
 create sequence project_activity_seq;
+
+create sequence project_comment_seq;
 
 create sequence tag_seq;
 
@@ -122,10 +144,18 @@ alter table asset_comment add constraint fk_asset_comment_user_4 foreign key (us
 create index ix_asset_comment_user_4 on asset_comment (user_id);
 alter table asset_container add constraint fk_asset_container_project_5 foreign key (project_id) references project (id);
 create index ix_asset_container_project_5 on asset_container (project_id);
-alter table project_activity add constraint fk_project_activity_project_6 foreign key (project_id) references project (id);
-create index ix_project_activity_project_6 on project_activity (project_id);
-alter table tag add constraint fk_tag_project_7 foreign key (project_id) references project (id);
-create index ix_tag_project_7 on tag (project_id);
+alter table asset_container_comment add constraint fk_asset_container_comment_ass_6 foreign key (asset_container_id) references asset_container (id);
+create index ix_asset_container_comment_ass_6 on asset_container_comment (asset_container_id);
+alter table asset_container_comment add constraint fk_asset_container_comment_use_7 foreign key (user_id) references userr (id);
+create index ix_asset_container_comment_use_7 on asset_container_comment (user_id);
+alter table project_activity add constraint fk_project_activity_project_8 foreign key (project_id) references project (id);
+create index ix_project_activity_project_8 on project_activity (project_id);
+alter table project_comment add constraint fk_project_comment_project_9 foreign key (project_id) references project (id);
+create index ix_project_comment_project_9 on project_comment (project_id);
+alter table project_comment add constraint fk_project_comment_user_10 foreign key (user_id) references userr (id);
+create index ix_project_comment_user_10 on project_comment (user_id);
+alter table tag add constraint fk_tag_project_11 foreign key (project_id) references project (id);
+create index ix_tag_project_11 on tag (project_id);
 
 
 
@@ -145,11 +175,15 @@ drop table if exists asset_container cascade;
 
 drop table if exists asset_container_activity cascade;
 
+drop table if exists asset_container_comment cascade;
+
 drop table if exists project cascade;
 
 drop table if exists project_userr cascade;
 
 drop table if exists project_activity cascade;
+
+drop table if exists project_comment cascade;
 
 drop table if exists tag cascade;
 
@@ -165,9 +199,13 @@ drop sequence if exists asset_container_seq;
 
 drop sequence if exists asset_container_activity_seq;
 
+drop sequence if exists asset_container_comment_seq;
+
 drop sequence if exists project_seq;
 
 drop sequence if exists project_activity_seq;
+
+drop sequence if exists project_comment_seq;
 
 drop sequence if exists tag_seq;
 

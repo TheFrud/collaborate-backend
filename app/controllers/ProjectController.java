@@ -10,6 +10,7 @@ import models.AssetContainer;
 import models.AssetContainerActivity;
 import models.Project;
 import models.ProjectActivity;
+import models.ProjectComment;
 import models.Tag;
 import models.Userr;
 import actors.MyWebSocketActor;
@@ -94,7 +95,7 @@ public class ProjectController extends Controller{
 	}
 	
 	public static Result getProject() {
-    	JsonNode json = request().body().asJson();
+		JsonNode json = request().body().asJson();
     	Long projectId = json.findPath("projectId").asLong();
 		Project project = Project.find.byId(projectId);
 		
@@ -118,6 +119,7 @@ public class ProjectController extends Controller{
 		JsonNode json = request().body().asJson();
 		Long projectId = json.findPath("projectId").asLong();
 		String projectDescription = json.findPath("projectDescription").textValue();
+		Logger.info(projectDescription);
 		Project project = Project.find.byId(projectId);
 		project.setDescription(projectDescription);
 		
@@ -165,5 +167,52 @@ public class ProjectController extends Controller{
 		Logger.info("A new owner added to project. New owner got notified by email.");
 		return ok("A new owner added to project. New owner got notified by email.");
 	}
-
+	
+	public static Result updateCollaborationPolicy() {
+		JsonNode json = request().body().asJson();
+		Long projectId = json.findPath("projectId").asLong();
+		String projectSecurityPolicy = json.findPath("projectSecurityPolicy").textValue();
+		
+		Project project = Project.find.byId(projectId);
+		project.setSecurityPolicy(projectSecurityPolicy);
+		
+    	Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
+		
+		// Sätter in aktivitet
+		ProjectActivity projectActivity = new ProjectActivity(user.username + " updated the collaboration policy to: " + projectSecurityPolicy + ".");
+		project.addActivity(projectActivity);	
+    	
+		project.save();
+		
+		Logger.info("Collaboration Policy updated.");
+		return ok("Collaboration Policy updated.");
+	}
+	
+	public static Result addCommentToProject() {
+		JsonNode json = request().body().asJson();
+		
+		Long projectId = json.findPath("projectId").asLong();
+		String projectCommentArg = json.findPath("projectComment").textValue();
+		
+		Project project = Project.find.byId(projectId);
+		
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");	
+		
+		ProjectComment projectComment = new ProjectComment(user, projectCommentArg);
+		
+		// Sätter in aktivitet
+		
+		ProjectActivity projectActivity = new ProjectActivity(
+				user.username + " posted a comment to Project: " + project.title + ".");
+		project.addActivity(projectActivity);	
+		
+		project.addComment(projectComment);
+		project.save();
+		
+		Logger.info("Comment posted to Project");
+		return ok("Comment posted to Project.");
+	}
+	
 }

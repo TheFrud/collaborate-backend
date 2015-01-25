@@ -46,6 +46,10 @@ public class Project extends Model{
     
     public String securityPolicy;
     
+    public void setSecurityPolicy(String securityPolicy) {
+    	this.securityPolicy = securityPolicy;
+    }	
+    
     @OneToMany(cascade=CascadeType.ALL)
     public List<Tag> tags = new ArrayList<>();
     
@@ -63,7 +67,12 @@ public class Project extends Model{
     	owners.add(user);
     }
     
-    // public ArrayList<Comment> comments = new ArrayList<>();
+    @OneToMany(cascade=CascadeType.ALL)
+    public List<ProjectComment> comments = new ArrayList<>();
+    
+    public void addComment(ProjectComment projectComment) {
+    	this.comments.add(projectComment);
+    }
     
     // public ArrayList<Contributor> contributors = new ArrayList<>();
     

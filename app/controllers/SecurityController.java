@@ -42,7 +42,7 @@ public class SecurityController extends Controller {
     	// Send email to registred user
     	Email mail = new Email();
     	mail.setSubject("Welcome to Devjungler!");
-    	mail.setFrom("Devjungler <thefrud@email.com>");
+    	mail.setFrom("Devjungler <devjungler@gmail.com>");
     	mail.addTo("TO <"+email+">");
     	// sends text, HTML or both...
     	mail.setBodyText("A text message");

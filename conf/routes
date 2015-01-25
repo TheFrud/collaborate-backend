@@ -3,41 +3,44 @@
 # ~~~~
 
 # Home page
-GET     /                               controllers.Application.index()
+GET     /                             			controllers.Application.index()
 
 # Security 
-POST	/register					    controllers.SecurityController.register()
-POST    /login                       	controllers.SecurityController.login()
-POST    /logout                         controllers.SecurityController.logout()
+POST	/register					 		    controllers.SecurityController.register()
+POST    /login                       			controllers.SecurityController.login()
+POST    /logout                      		    controllers.SecurityController.logout()
 
 # Project stuff
-GET		/projects/get					controllers.ProjectController.getProjects()
-GET		/projects/getuserprojects		controllers.ProjectController.getProjectsWhereUserIsOwner()
-POST	/project/create					controllers.ProjectController.createProject()
-POST	/project/get					controllers.ProjectController.getProject()
-POST	/project/remove					controllers.ProjectController.removeProject()
-POST	/project/description/update		controllers.ProjectController.updateProjectDescription()
-POST	/addownertoproject				controllers.ProjectController.addOwnerToProject()
-
+GET		/projects/get							controllers.ProjectController.getProjects()
+GET		/projects/getuserprojects				controllers.ProjectController.getProjectsWhereUserIsOwner()
+POST	/project/create							controllers.ProjectController.createProject()
+POST	/project/get							controllers.ProjectController.getProject()
+POST	/project/remove							controllers.ProjectController.removeProject()
+POST	/project/description/update				controllers.ProjectController.updateProjectDescription()
+POST	/addownertoproject						controllers.ProjectController.addOwnerToProject()
+POST	/project/update/collaborationpolicy		controllers.ProjectController.updateCollaborationPolicy()
+POST	/project/add/comment					controllers.ProjectController.addCommentToProject()	
+	
 # Asset Container stuff
-GET		/getassetcontainers 			controllers.AssetContainerController.getAssetContainers()
-POST	/project/assetcontainer/add		controllers.AssetContainerController.addAssetContainer()
-POST	/assetcontainer/get				controllers.AssetContainerController.getAssetContainer()
-POST	/assetcontainer/markascompleted	controllers.AssetContainerController.markAssetContainerAsCompleted()
+GET		/getassetcontainers 					controllers.AssetContainerController.getAssetContainers()
+POST	/project/assetcontainer/add				controllers.AssetContainerController.addAssetContainer()
+POST	/assetcontainer/get						controllers.AssetContainerController.getAssetContainer()
+POST	/assetcontainer/markascompleted			controllers.AssetContainerController.markAssetContainerAsCompleted()
+POST	/assetcontainer/add/comment				controllers.AssetContainerController.addCommentToAssetContainer()
 
 # Asset stuff
-GET		/getassets						controllers.AssetController.getAssets()
-GET		/getuserassets					controllers.AssetController.getUserAssets()
-POST	/asset/create					controllers.AssetController.addAsset()
-POST	/getasset						controllers.AssetController.getAsset()
-POST	/addcommenttoasset				controllers.AssetController.addCommentToAsset()
-POST	/asset/approve					controllers.AssetController.approveAsset()
+GET		/getassets								controllers.AssetController.getAssets()
+GET		/getuserassets							controllers.AssetController.getUserAssets()
+POST	/asset/create							controllers.AssetController.addAsset()
+POST	/getasset								controllers.AssetController.getAsset()
+POST	/addcommenttoasset						controllers.AssetController.addCommentToAsset()
+POST	/asset/approve							controllers.AssetController.approveAsset()
 
 # User stuff
-GET		/getcurrentuser					controllers.UserController.getCurrentUser()
-GET		/getusers						controllers.UserController.getUsers()
-POST	/user/edit						controllers.UserController.editUser()
-POST	/getuser						controllers.UserController.getUser()
+GET		/getcurrentuser							controllers.UserController.getCurrentUser()
+GET		/getusers								controllers.UserController.getUsers()
+POST	/user/edit								controllers.UserController.editUser()
+POST	/getuser								controllers.UserController.getUser()
 
 
 

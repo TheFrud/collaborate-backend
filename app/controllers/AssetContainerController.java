@@ -4,7 +4,10 @@ import static play.libs.Json.toJson;
 
 import java.util.List;
 
+import models.Asset;
+import models.AssetComment;
 import models.AssetContainer;
+import models.AssetContainerComment;
 import models.Project;
 import models.ProjectActivity;
 import models.Userr;
@@ -88,5 +91,35 @@ public class AssetContainerController extends Controller {
 		Logger.info("Asset Container marked as completed.");
 		return ok("Asset Container marked as completed.");
 	}	
+	
+	public static Result addCommentToAssetContainer() {
+		JsonNode json = request().body().asJson();
+		
+		Long projectId = json.findPath("projectId").asLong();
+		Long assetContainerId = json.findPath("assetContainerId").asLong();
+		String assetContainerCommentArg = json.findPath("assetContainerComment").textValue();
+		
+		Context ctx = Context.current();
+		Userr user = (Userr) ctx.args.get("user");
+		
+		AssetContainerComment assetContainerComment = new AssetContainerComment(user, assetContainerCommentArg);
+		
+		AssetContainer assetContainer = AssetContainer.find.byId(assetContainerId);
+		Project project = Project.find.byId(projectId);
+		
+		assetContainer.addComment(assetContainerComment);
+		
+		// Sätter in aktivitet
+		
+		ProjectActivity projectActivity = new ProjectActivity(
+				user.username + " posted a comment to Asset Container " + assetContainer.title + ".");
+		project.addActivity(projectActivity);	
+		
+		assetContainer.save();
+		project.save();
+		
+		Logger.info("Comment posted to Asset Container.");
+		return ok("Comment posted to Asset Container.");
+	}
 	
 }
