@@ -85,6 +85,13 @@ public class ProjectController extends Controller{
 		return ok(toJson(projects));
 	}
 	
+	public static Result getOpenProjects() {
+		List<Project> projects = Project.find.where().eq("securityPolicy", "Open").findList();
+		Logger.info("Projects with 'Open'-security returned to client.");
+		return ok(toJson(projects));
+	}
+	
+	
 	public static Result getProjectsWhereUserIsOwner() {
 		Context ctx = Context.current();
     	Userr user =  (Userr) ctx.args.get("user");

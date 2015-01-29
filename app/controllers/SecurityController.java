@@ -1,8 +1,11 @@
 package controllers;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import models.Project;
 import models.Userr;
 import play.Logger;
 import play.api.mvc.Session;
@@ -15,7 +18,6 @@ import play.mvc.Http.Context;
 import static play.libs.Json.toJson;
 import static play.mvc.Controller.request;
 import static play.mvc.Controller.response;
-
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 
@@ -28,7 +30,7 @@ public class SecurityController extends Controller {
     public static Userr getUser() {
         return (Userr)Http.Context.current().args.get("user");
     }
-
+    
     public static Result register() {
     	Logger.info("Client trying to register.");
     	JsonNode json = request().body().asJson();
@@ -103,6 +105,33 @@ public class SecurityController extends Controller {
         return ok("User logged out");
     }
 
+    @Security.Authenticated(Secured.class)
+    public static Result isUserAdminOfProject() {
+        
+    	JsonNode json = request().body().asJson();
+    	Long projectId = json.findPath("projectId").asLong();
+    	
+		Context ctx = Context.current();
+    	Userr user =  (Userr) ctx.args.get("user");
+    	
+    	Project project = Project.find.byId(projectId);
+    	
+    	Logger.info("Checked if user was admin of project.");
+    	
+    	for(int i = 0; i < project.owners.size(); i++) {
+    		
+    		if(user.equals(project.owners.get(i))){
+    			return ok("User is admin");
+    		}
+    		
+    	}
+    	return unauthorized("User was not admin");
+        
+        
+        
+    }    
+    
+    
     public static class Login {
 
         @Constraints.Required

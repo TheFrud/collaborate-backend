@@ -9,9 +9,11 @@ GET     /                             			controllers.Application.index()
 POST	/register					 		    controllers.SecurityController.register()
 POST    /login                       			controllers.SecurityController.login()
 POST    /logout                      		    controllers.SecurityController.logout()
+POST	/isuseradminofproject					controllers.SecurityController.isUserAdminOfProject()
 
 # Project stuff
 GET		/projects/get							controllers.ProjectController.getProjects()
+GET		/projects/get/open						controllers.ProjectController.getOpenProjects()
 GET		/projects/getuserprojects				controllers.ProjectController.getProjectsWhereUserIsOwner()
 POST	/project/create							controllers.ProjectController.createProject()
 POST	/project/get							controllers.ProjectController.getProject()
