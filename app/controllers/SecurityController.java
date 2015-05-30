@@ -95,15 +95,19 @@ public class SecurityController extends Controller {
         }
     	}
         
-    @Security.Authenticated(Secured.class)
+    // @Security.Authenticated(Secured.class)
     public static Result logout() {
-        
-    	// response().discardCookie(AUTH_TOKEN);
-        getUser().deleteAuthToken();
-        
-        Logger.info("User logged out");
-        return ok("User logged out");
-    }
+
+		// response().discardCookie(AUTH_TOKEN);
+		try {
+			getUser().deleteAuthToken();
+		} catch (Exception e) {
+			Logger.info("User is already logged out: " + e.getMessage());
+		}
+
+		Logger.info("User logged out");
+		return ok("User logged out");
+	}
 
     @Security.Authenticated(Secured.class)
     public static Result isUserAdminOfProject() {
